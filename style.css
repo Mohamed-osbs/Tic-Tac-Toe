@@ -1,0 +1,138 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:Arial;
+  background:linear-gradient(135deg,#020617,#0f172a);
+  color:white;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  min-height:100vh;
+}
+
+.container{
+  text-align:center;
+}
+
+h1{
+  margin-bottom:20px;
+  font-size:40px;
+}
+
+.modes{
+  margin-bottom:20px;
+}
+
+button{
+  padding:12px 20px;
+  margin:5px;
+
+  border:none;
+  border-radius:10px;
+
+  background:#1e293b;
+  color:white;
+
+  cursor:pointer;
+
+  transition:.3s;
+  font-size:16px;
+}
+
+button:hover{
+  transform:scale(1.05);
+  background:#334155;
+}
+
+.active{
+  background:#3b82f6;
+}
+
+.board{
+  display:grid;
+  grid-template-columns:repeat(3,110px);
+
+  gap:12px;
+
+  justify-content:center;
+
+  margin:25px auto;
+}
+
+.cell{
+  width:110px;
+  height:110px;
+
+  background:#111827;
+
+  border-radius:15px;
+
+  display:flex;
+  justify-content:center;
+  align-items:center;
+
+  font-size:45px;
+  font-weight:bold;
+
+  cursor:pointer;
+
+  transition:.3s;
+}
+
+.cell:hover{
+  transform:scale(1.05);
+  background:#1e293b;
+}
+
+.x{
+  color:#3b82f6;
+}
+
+.o{
+  color:#f43f5e;
+}
+
+/* لون الفائز */
+.win{
+  background:#22c55e !important;
+  color:white !important;
+}
+
+.scores{
+  display:flex;
+  justify-content:center;
+
+  gap:20px;
+
+  margin-top:20px;
+
+  font-size:20px;
+}
+
+.controls{
+  margin-top:25px;
+}
+
+#status{
+  min-height:30px;
+}
+
+@media(max-width:500px){
+
+  .board{
+    grid-template-columns:repeat(3,90px);
+  }
+
+  .cell{
+    width:90px;
+    height:90px;
+    font-size:35px;
+  }
+
+}
