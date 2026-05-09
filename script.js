@@ -13,9 +13,9 @@ const winConditions = [
   [0, 4, 8], [2, 4, 6]
 ];
 const sounds = {
-  click: new Audio("assets/sounds/dog-clicker_IygBqAk.mp3"),
-  win: new Audio("assets/sounds/winner-price-is-right.mp3"),
-  loss: new Audio("assets/sounds/points-loss.mp3")
+  click: new Audio("sounds/dog-clicker_IygBqAk.mp3"),
+  win: new Audio("sounds/winner-price-is-right.mp3"),
+  loss: new Audio("sounds/points-loss.mp3")
 };
 function playSound(type) {
   if (sounds[type]) {
