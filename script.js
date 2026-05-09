@@ -2,7 +2,6 @@ let board = [...Array(9).fill("")];
 let currentPlayer = "X";
 let gameActive = true;
 let mode = "multi";
-/* Saved Scores */
 let scores = JSON.parse(localStorage.getItem("scores")) || {
   X: 0,
   O: 0,
@@ -13,6 +12,17 @@ const winConditions = [
   [0, 3, 6], [1, 4, 7], [2, 5, 8],
   [0, 4, 8], [2, 4, 6]
 ];
+const sounds = {
+  click: new Audio("assets/sounds/dog-clicker_IygBqAk.mp3"),
+  win: new Audio("assets/sounds/winner-price-is-right.mp3"),
+  loss: new Audio("assets/sounds/points-loss.mp3")
+};
+function playSound(type) {
+  if (sounds[type]) {
+    sounds[type].currentTime = 0;
+    sounds[type].play().catch(() => {}); 
+  }
+}
 function minimax(tempBoard, isMax) {
   const winner = getWinner(tempBoard);
   if (winner === "O") return 10;
@@ -20,7 +30,6 @@ function minimax(tempBoard, isMax) {
   if (!tempBoard.includes("")) return 0;
 
   let bestScore = isMax ? -Infinity : Infinity;
-
   tempBoard.forEach((_, i) => {
     if (tempBoard[i] === "") {
       tempBoard[i] = isMax ? "O" : "X";
@@ -51,26 +60,19 @@ function bestMove() {
 }
 function getWinner(currentBoard) {
   for (const [a, b, c] of winConditions) {
-    if (
-      currentBoard[a] &&
-      currentBoard[a] === currentBoard[b] &&
-      currentBoard[a] === currentBoard[c]
-    ) {
+    if (currentBoard[a] && currentBoard[a] === currentBoard[b] && currentBoard[a] === currentBoard[c]) {
       return currentBoard[a];
     }
   }
   return null;
 }
-/*Board */
 function render() {
   const boardElement = document.getElementById("board");
   boardElement.innerHTML = "";
   board.forEach((value, index) => {
     const cell = document.createElement("div");
     cell.className = "cell";
-    if (value) {
-      cell.classList.add(value.toLowerCase());
-    }
+    if (value) cell.classList.add(value.toLowerCase());
     cell.textContent = value;
     cell.onclick = () => handleMove(index);
     boardElement.appendChild(cell);
@@ -80,11 +82,7 @@ function render() {
 function highlightWinner() {
   const boardElement = document.getElementById("board");
   winConditions.forEach(([a, b, c]) => {
-    if (
-      board[a] &&
-      board[a] === board[b] &&
-      board[a] === board[c]
-    ) {
+    if (board[a] && board[a] === board[b] && board[a] === board[c]) {
       [a, b, c].forEach(i => {
         boardElement.children[i].classList.add("win");
       });
@@ -93,19 +91,22 @@ function highlightWinner() {
 }
 function handleMove(index) {
   if (!gameActive || board[index]) return;
-
+  playSound("click");
   board[index] = currentPlayer;
   render();
   if (checkGameOver()) return;
   currentPlayer = currentPlayer === "X" ? "O" : "X";
   updateStatus();
+
   if (mode === "ai" && currentPlayer === "O") {
     setTimeout(aiTurn, 400);
   }
 }
 function aiTurn() {
   if (!gameActive) return;
-  board[bestMove()] = "O";
+  const move = bestMove();
+  board[move] = "O";
+  playSound("click");
   render();
   if (checkGameOver()) return;
   currentPlayer = "X";
@@ -119,6 +120,7 @@ function checkGameOver() {
     saveScores();
     updateScoresUI();
     document.getElementById("status").textContent = `Player ${winner} Wins!`;
+    playSound("win");
     return true;
   }
 
@@ -128,10 +130,12 @@ function checkGameOver() {
     saveScores();
     updateScoresUI();
     document.getElementById("status").textContent = "It's a Draw!";
+    playSound("loss");
     return true;
   }
   return false;
-}function updateStatus() {
+}
+function updateStatus() {
   document.getElementById("status").textContent = `Player ${currentPlayer}'s Turn`;
 }
 function updateScoresUI() {
@@ -154,7 +158,6 @@ function resetScores() {
   saveScores();
   updateScoresUI();
 }
-/* game mode switch */
 function setMode(newMode) {
   mode = newMode;
   document.getElementById("m2").classList.toggle("active", newMode === "multi");
